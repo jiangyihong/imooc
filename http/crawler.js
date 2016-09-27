@@ -19,9 +19,9 @@ function filterChapters(html) {
     //课程信息
     var courseData = new Array();
     //遍历章节信息
-    chapters.each(function(item) {
+    chapters.each(function (item) {
         var chapter = $(this);
-        var chapterTitle = chapter.find("strong").text().replace(/\s*\r\n\s*/g,"");
+        var chapterTitle = chapter.find("strong").text().replace(/\s*\r\n\s*/g, "");
         var videos = chapter.find(".video").children("li");
         var chapterData = {
             chapterTitle: chapterTitle,
@@ -39,6 +39,17 @@ function filterChapters(html) {
             });
         });
 
+        // videos.each(item => {
+        //     //获取video对象
+        //     var video = $(this).find(".J-media-item");
+        //     var videoTitle = video.text().replace(/\s*\r\n\s*/g, "");
+        //     var id = video.attr("href").split("video/")[1].replace(/\s*\r\n\s*/g, "");
+        //     chapterData.videos.push({
+        //         videoTitle: videoTitle,
+        //         id: id
+        //     });
+        // });
+
         courseData.push(chapterData);
     });
     return courseData;
@@ -48,11 +59,11 @@ function filterChapters(html) {
  * 遍历显示课程信息
  */
 function printCourseInfo(courseData) {
-    courseData.forEach(function(item) {
+    courseData.forEach(function (item) {
         var chapterTitle = item.chapterTitle;
         console.log(chapterTitle + "\n");
         //显示视频信息
-        item.videos.forEach(function(video) {
+        item.videos.forEach(function (video) {
             console.log("【" + video.id + "】" + video.videoTitle + "\n");
         });
     });
@@ -61,21 +72,21 @@ function printCourseInfo(courseData) {
 /**
  * 发送httl请求获取数据
  */
-http.get(url, function(response) {
+http.get(url, function (response) {
     var html = "";
 
     //当用有数据的时候将数据放到赋值给html
-    response.on("data", function(data) {
+    response.on("data", function (data) {
         html += data;
     });
 
-    response.on("end", function() {
+    response.on("end", function () {
         //过滤章节信息
         var courseData = filterChapters(html);
         //console.log(html);
         //输出课程信息
         printCourseInfo(courseData);
     });
-}).on("error", function() {
+}).on("error", function () {
     console.log("获取课程数据出错");
 });
